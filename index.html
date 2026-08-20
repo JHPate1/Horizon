@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Tab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function () {
+      try {
+        var d = JSON.parse(localStorage.getItem('horizon.v2') || '{}');
+        if (!d.sky) return;
+        var root = document.documentElement;
+        root.dataset.sky = d.sky.mode || 'dawn';
+        if (d.sky.color) root.style.setProperty('--custom-base', d.sky.color);
+        if (d.sky.mode === 'image' && d.sky.imageUrl) {
+          root.style.setProperty(
+            '--sky-image',
+            'url("' + String(d.sky.imageUrl).replace(/"/g, '') + '")'
+          );
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <main id="horizon">
+    <!-- Atmosphere -->
+    <div id="atmosphere" aria-hidden="true"></div>
+    <div id="grain" aria-hidden="true"></div>
+    <div id="wordmark" aria-hidden="true">Horizon</div>
+
+    <!-- Core Interface -->
+    <section id="center-stage">
+      <div id="greeting">
+        <span id="greeting-time">Good morning,</span>
+        <span id="greeting-name" contenteditable="true" spellcheck="false" role="textbox" aria-label="Edit name" tabindex="0">there</span>
+      </div>
+      
+      <div id="clock-container">
+        <time id="clock">00:00</time>
+      </div>
+      
+      <div id="date-container">
+        <time id="date">Loading...</time>
+      </div>
+
+      <form id="search-form" action="https://www.google.com/search" method="GET">
+        <input type="text" id="search-input" name="q" placeholder="Where to next?" autocomplete="off" aria-label="Search the web">
+      </form>
+      <nav id="links" aria-label="Quick Links"></nav>
+    </section>
+
+
+    <!-- Settings -->
+    <button id="settings-trigger" aria-label="Open settings">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+
+    <aside id="settings-panel" class="hidden" role="dialog" aria-label="Settings">
+      <div id="settings-overlay"></div>
+      <div id="settings-content" class="glass">
+        <button id="settings-close" aria-label="Close settings">&times;</button>
+        <h2>Horizon</h2>
+
+        <div class="setting-group">
+          <label for="setting-name">Profile</label>
+          <input type="text" id="setting-name" placeholder="Your name" autocomplete="off">
+        </div>
+
+        <div class="setting-group">
+          <label>Time</label>
+          <div class="toggle-group">
+            <button type="button" class="toggle-btn active" data-format="12">12-hour</button>
+            <button type="button" class="toggle-btn" data-format="24">24-hour</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label>Sky</label>
+          <div id="sky-swatches" class="sky-swatches">
+            <button type="button" class="sky-swatch" data-sky="dawn" title="Horizon Dawn">
+              <span class="swatch-preview swatch-dawn"></span>
+              <span>Dawn</span>
+            </button>
+            <button type="button" class="sky-swatch" data-sky="midnight" title="Midnight">
+              <span class="swatch-preview swatch-midnight"></span>
+              <span>Midnight</span>
+            </button>
+            <button type="button" class="sky-swatch" data-sky="dusk" title="Dusk">
+              <span class="swatch-preview swatch-dusk"></span>
+              <span>Dusk</span>
+            </button>
+            <button type="button" class="sky-swatch" data-sky="fog" title="Fog">
+              <span class="swatch-preview swatch-fog"></span>
+              <span>Fog</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label for="setting-color">Custom color</label>
+          <div class="row">
+            <input type="color" id="setting-color" value="#c47b48" aria-label="Custom sky color">
+            <button type="button" id="apply-color" class="btn-secondary">Use color</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label for="setting-image">Background image</label>
+          <input type="url" id="setting-image" placeholder="Paste an image URL" autocomplete="off">
+          <button type="button" id="apply-image" class="btn-secondary">Set image</button>
+          <p class="hint">Covered and dimmed so the clock stays readable. Broken URLs fall back to Dawn.</p>
+          <div id="sky-presets" class="sky-presets" aria-label="Preset skies">
+            <button type="button" class="preset" data-img="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=2560&q=80" title="Alpine ridge" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=200&q=60')"></button>
+            <button type="button" class="preset" data-img="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2560&q=80" title="Ocean morning" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=200&q=60')"></button>
+            <button type="button" class="preset" data-img="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&w=2560&q=80" title="Night sky" style="background-image:url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&w=200&q=60')"></button>
+            <button type="button" class="preset" data-img="https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?auto=format&fit=crop&w=2560&q=80" title="Fog and sea" style="background-image:url('https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?auto=format&fit=crop&w=200&q=60')"></button>
+          </div>
+          <p class="hint">Photos via Unsplash (Jakub Kriz, Sean Oulashin, Greg Rakozy, Francesco Ungaro).</p>
+        </div>
+
+        <div class="setting-group">
+          <label>Links</label>
+          <button type="button" id="reset-links" class="btn-secondary">Reset to defaults</button>
+        </div>
+      </div>
+    </aside>
+
+    <div id="toast-container" aria-live="polite"></div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
